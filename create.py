@@ -28,32 +28,32 @@ def getStep(calcType, len1=1, len2=1, divideExactly = False):
             t = (str(a*b) + " ÷ " + str(b), str(a))
     return t
 
-def createOneDay():
+def createOneDay(perday=10):
     lines=[]
     answer=[]
     
     answer.append("加:")
-    for i in range(10):
+    for i in range(perday):
         one = getStep("add", 3, 3)
         lines.append(one[0] + " = ")
         answer.append(one[1])
     
     answer.append("减:")
-    for i in range(10):
+    for i in range(perday):
         one = getStep("minus", 3, 3)
         lines.append(one[0] + " = ");
         answer.append(one[1])
     
     answer.append("乘:")
-    for i in range(10):
+    for i in range(perday):
         one = getStep("multiple", 3, 2)
         lines.append(one[0] + " = ")
         answer.append(one[1])
     
     answer.append("除:")
-    for i in range(10):
+    for i in range(perday):
         divideE = False
-        if random.randint(1,10) <= 7:   #三分之一不能整除 
+        if random.randint(1,10) <= 5:   #一半不能整除 
             divideE = True
         one = getStep("divide", 2, 2, divideE)
         lines.append(one[0] + " = ")
@@ -65,9 +65,10 @@ def createOneDay():
 filename= datetime.datetime.now().strftime("%Y%m%d%H%M%S")+".txt" 
 with open("/"+filename, "w") as f:
     dayanswer = []
-    for day in range(9):
+    days = 10
+    for day in range(days):
         f.write("Day " + str(day + 1) + " : " +"\n\n")
-        oneday = createOneDay()
+        oneday = createOneDay(5)
         i = 0
         for line in oneday[0]:
             f.write(line)
@@ -76,7 +77,7 @@ with open("/"+filename, "w") as f:
                 f.write("\n\n")
             else:
                 f.write("\t\t\t\t\t\t\t\t")
-        f.write("\n\n")
+        f.write("\n")
         
         daya = "Day " + str(day + 1) + " : "
         for word in oneday[1]:
