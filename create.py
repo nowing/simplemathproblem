@@ -8,6 +8,21 @@ import random
 import datetime
 
 
+class AddCreator(object):
+    pass
+
+class MinusCreator(object):
+    pass
+
+class MultipleCreator(object):
+    pass
+
+class DivideCreator(object):
+    pass
+
+
+
+
 def getStep(calcType, len1=1, len2=1, divideExactly = False):
     a = random.randint(10**(len1-1), 10**len1)
     b = random.randint(10**(len2-1), 10**len2)
