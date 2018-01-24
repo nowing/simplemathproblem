@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 Spyder Editor
-
 This is a temporary script file.
 """
 import random
 import datetime
+from decimal import Decimal
+from decimal import getcontext
 
 
 class AddCreator(object):
@@ -23,15 +24,20 @@ class DivideCreator(object):
 
 
 
-def getStep(calcType, len1=1, len2=1, divideExactly = False):
-    a = random.randint(10**(len1-1), 10**len1)
-    b = random.randint(10**(len2-1), 10**len2)
+def getStep(calcType, len1=1, len2=1, divideExactly = False, withPoint = 0):
+    if withPoint == 0:
+        a = random.randint(10**(len1-1), 10**len1)
+        b = random.randint(10**(len2-1), 10**len2)
+    else:
+        a = round(random.randint(10**(len1-1+withPoint), 10**(len1+withPoint)) / (10**withPoint), withPoint)
+        b = round(random.randint(10**(len2-1+withPoint), 10**(len2+withPoint)) / (10**withPoint), withPoint)
+        
     if calcType == "add":
-        t = (str(a) + " + " + str(b), a+b )
+        t = (str(a) + " + " + str(b), Decimal(str(a)) + Decimal(str(b)))
     elif calcType == "minus":
-        t = (str(a+b) + " - " + str(b), a)
+        t = (str((Decimal(str(a)) + Decimal(str(b)))) + " - " + str(b), str(a))
     elif calcType == "multiple":
-        t = (str(a) + " × " + str(b), a*b )
+        t = (str(a) + " × " + str(b), Decimal(str(a)) * Decimal(str(b)) )
     elif calcType == "divide":
         if divideExactly == False:
             c = random.randint(0, b)
@@ -49,19 +55,19 @@ def createOneDay(perday=10):
     
     answer.append("加:")
     for i in range(perday):
-        one = getStep("add", 3, 3)
+        one = getStep("add", 3, 3, False, 1)
         lines.append(one[0] + " = ")
         answer.append(one[1])
     
     answer.append("减:")
     for i in range(perday):
-        one = getStep("minus", 3, 3)
+        one = getStep("minus", 3, 3, False, 1)
         lines.append(one[0] + " = ");
         answer.append(one[1])
     
     answer.append("乘:")
     for i in range(perday):
-        one = getStep("multiple", 3, 2)
+        one = getStep("multiple", 3, 2, False, 1)
         lines.append(one[0] + " = ")
         answer.append(one[1])
     
@@ -78,7 +84,7 @@ def createOneDay(perday=10):
     
     
 filename= datetime.datetime.now().strftime("%Y%m%d%H%M%S")+".txt" 
-with open("/"+filename, "w") as f:
+with open("d:/"+filename, "w") as f:
     dayanswer = []
     days = 10
     for day in range(days):
@@ -102,6 +108,6 @@ with open("/"+filename, "w") as f:
     for word in dayanswer:
         f.write(str(word) + "  " + "\n\n")
 
-with open("/"+filename, "r") as f:
+with open("d:/"+filename, "r") as f:
     line = f.readlines()
     print(line)
