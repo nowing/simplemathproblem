@@ -6,7 +6,7 @@ This is a temporary script file.
 import random
 import datetime
 from decimal import Decimal
-from decimal import getcontext
+#from decimal import getcontext
 
 
 class AddCreator(object):
@@ -39,14 +39,17 @@ def getStep(calcType, len1=1, len2=1, divideExactly = False, withPoint = 0):
     elif calcType == "multiple":
         t = (str(a) + " × " + str(b), Decimal(str(a)) * Decimal(str(b)) )
     elif calcType == "divide":
-        if divideExactly == False:
-            c = random.randint(0, b)
+        if withPoint == 0:
+            if divideExactly == False:
+                c = random.randint(0, b)
+            else:
+                c = 0
+            if divideExactly == False:
+                t = (str(a*b+c) + " ÷ " + str(b), str(a) + "..." + str(c))
+            else:
+                t = (str(a*b) + " ÷ " + str(b), str(a))
         else:
-            c = 0
-        if divideExactly == False:
-            t = (str(a*b+c) + " ÷ " + str(b), str(a) + "..." + str(c))
-        else:
-            t = (str(a*b) + " ÷ " + str(b), str(a))
+            t = (str((Decimal(str(a)) * Decimal(str(b)))) + " ÷ " + str(b), str(a))
     return t
 
 def createOneDay(perday=10):
@@ -73,10 +76,10 @@ def createOneDay(perday=10):
     
     answer.append("除:")
     for i in range(perday):
-        divideE = False
-        if random.randint(1,10) <= 5:   #一半不能整除 
-            divideE = True
-        one = getStep("divide", 2, 2, divideE)
+#        divideE = False
+#        if random.randint(1,10) <= 5:   #一半不能整除 
+#            divideE = True
+        one = getStep("divide", 2, 2, False, 1)
         lines.append(one[0] + " = ")
         answer.append(one[1])
         
