@@ -5,7 +5,8 @@ This is a temporary script file.
 """
 import random
 import datetime
-import math
+from decimal import Decimal
+from decimal import getcontext
 
 def getStep(calcType, len1=1, len2=1, divideType = 'ZC'):
     # divideType: ZC=整除   YS=余数   XS=小数
@@ -13,14 +14,24 @@ def getStep(calcType, len1=1, len2=1, divideType = 'ZC'):
     b = random.randint(10**(len2-1), 10**len2)
     c = 0
     if calcType == "add":
-        t = (str(a) + " + " + str(b), a+b )
+        scale = 10**random.randint(1,2)
+        scale2 = 10**random.randint(1,2)
+        a = Decimal(a) / Decimal(scale)
+        b = Decimal(b) / Decimal(scale2)
+        t = (str(a) + " + " + str(b), str(Decimal(a) + Decimal(b)) )
     elif calcType == "minus":
-        t = (str(a+b) + " - " + str(b), a)
+        scale = 10**random.randint(1,2)
+        scale2 = 10**random.randint(1,2)
+        a = Decimal(a) / Decimal(scale)
+        b = Decimal(b) / Decimal(scale2)
+        t = (str(Decimal(a) + Decimal(b)) + " - " + str(b), str(a))
     elif calcType == "multiple":
-        scale = math.pow(10, random.randint(0,1))
-        scale2 = math.pow(10, random.randint(0,1))
+        scale = 10**random.randint(1,2)
+        scale2 = 10**random.randint(1,2)
+        a = Decimal(a) / Decimal(scale)
+        b = Decimal(b) / Decimal(scale2)
 
-        t = (str(a) + " × " + str(b), a*b )
+        t = (str(a) + " × " + str(b), Decimal(a)*Decimal(b) )
     elif calcType == "divide":
         if divideType == 'YS':
             c = random.randint(0, b)
@@ -30,10 +41,10 @@ def getStep(calcType, len1=1, len2=1, divideType = 'ZC'):
         elif divideType == 'ZC':
             t = (str(a*b) + " ÷ " + str(b), str(a))
         else : # XS
-            scale = math.pow(10, random.randint(1,2))
-            scale2 = math.pow(10, random.randint(0,1))
+            scale = 10**random.randint(1,2)
+            scale2 = 10**random.randint(0,1)
             scale_t = scale * scale2
-            t = (str(a*b/scale_t)) + " ÷ " + str(b/scale2), str(a/scale)
+            t = (str(Decimal(a)*Decimal(b)/Decimal(scale_t)) + " ÷ " + str(Decimal(b)/Decimal(scale2)), str(Decimal(a)/Decimal(scale)))
     return t
 
 def createOneDay():
