@@ -42,6 +42,7 @@ def basic_operation(s):                           # 计算一个基本的4则运
     return add_sub(remove_md(s))                  # 调用前面定义的函数，先乘除，后加减
  
 def calculate(expression):                        # 计算包含括号的表达式
+    print(expression)
     if not re.search(r'\([^()]+\)', expression):                    # 匹配最里面的括号，如果没有的话，直接进行运算，得出结果
         return basic_operation(expression)
     k = re.search(r'\([^()]+\)', expression).group()                # 将匹配到的括号里面的表达式交给basic_operation处理后重新拼接成字符串递归处理
@@ -56,23 +57,44 @@ def calculate(expression):                        # 计算包含括号的表达�
 # 生成含count个计算项的四则运算
 def createExp(count = 5, hasBrackets = False):
     s = ''
+    braStart = False
+    braEnd = False
+    hasMid = False
     for i in range(0, count):
-        z = random.randint(3,4)
-        x = random.randint(1,3)
+        z = random.randint(1,3)   #整数部分
+        x = random.randint(1,2)   #小数部分
+
+        if hasBrackets and not braStart and i != count-1 and not s.endswith('/'):
+            if random.randint(0, 2) == 2:
+                s = s + '('
+                braStart = True
+        
         if s.endswith('*'):  # 乘时只算 0.1 * n 形式
             s = s + str(createDivTen() * random.randint(1, 9))
         elif s.endswith('/'): #除时只算 0.1 形式
             s = s + str(createDivTen())
         else:
             s = s + str(createNum(z, x))
+            
+        if braStart and not braEnd and hasMid:
+            s = s + ')'
+            braEnd = True
+            
         if i != count-1:   # 不是最后一个数字，取得计算符
             optList = '+-*/'
+            
+            if braStart and not braEnd:  # 在括号内，只做加减运算
+                optList = '+-'
+                hasMid = True
+                    
             if '*' in s:
                 optList = optList.replace('*', '') 
             if '/' in s:
                 optList = optList.replace('/', '')
             s = s + getRandOperator(optList)
     
+
+
     return s
         
     
@@ -109,41 +131,44 @@ def oneDay():
     
     count = 20 # 每天的题目数
     for i in range(count):
-        exp = createExp()
+        exp = createExp(random.randint(4,5), True)
         ans = removeRight0(calculate(exp))
         
         lines.append(exp)
         answer.append(ans)
         
     return (lines, answer)
-        
-
-filename= "c:\\temp\\" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")+".txt" 
-getcontext().prec = 15
-with open(filename, "w") as f:
-    dayanswer = []
-    days = 10  # 生成10天
-    for day in range(days):
-        f.write("Day " + str(day + 1) + " : " +"\n\n")
-        oneday = oneDay()
-        i = 0
-        for line in oneday[0]:
-            f.write(line)
-            i = i + 1
+  
+# 生成10天题目     
+def createDoc():
+    filename= "c:\\temp\\" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")+".txt" 
+    getcontext().prec = 10
+    with open(filename, "w") as f:
+        dayanswer = []
+        days = 10  # 生成10天
+        for day in range(days):
+            f.write("Day " + str(day + 1) + " : " +"\n\n")
+            oneday = oneDay()
+            i = 1
+            for line in oneday[0]:
+                f.write(str(i) + '. ' + line)
+                i = i + 1
+                f.write("\n\n")
             f.write("\n\n")
-        f.write("\n\n")
-        
-        daya = "Day " + str(day + 1) + " : "
-        for word in oneday[1]:
-            daya = daya + str(word) + "  "
-        dayanswer.append(daya)
-
-    for word in dayanswer:
-        f.write(str(word) + "  " + "\n\n")
-
-with open(filename, "r") as f:
-    line = f.readlines()
-    print(line)
-
-
+            
+            i = 1
+            daya = "Day " + str(day + 1) + " : "
+            for word in oneday[1]:
+                daya = daya + str(i) + ': ' +  str(word) + "  "
+                i = i + 1
+            dayanswer.append(daya)
     
+        for word in dayanswer:
+            f.write(str(word) + "  " + "\n\n")
+    
+    with open(filename, "r") as f:
+        line = f.readlines()
+        print(line)
+
+
+createDoc()
