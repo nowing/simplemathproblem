@@ -42,7 +42,6 @@ def basic_operation(s):                           # 计算一个基本的4则运
     return add_sub(remove_md(s))                  # 调用前面定义的函数，先乘除，后加减
  
 def calculate(expression):                        # 计算包含括号的表达式
-    print(expression)
     if not re.search(r'\([^()]+\)', expression):                    # 匹配最里面的括号，如果没有的话，直接进行运算，得出结果
         return basic_operation(expression)
     k = re.search(r'\([^()]+\)', expression).group()                # 将匹配到的括号里面的表达式交给basic_operation处理后重新拼接成字符串递归处理
