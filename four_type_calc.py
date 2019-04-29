@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
 import re
 import random
 import datetime
 from decimal import Decimal
 from decimal import getcontext
+import codecs
 
 def multiply_divide(s):                               #计算一个不含括号的最小乘除单元，用split分隔*或/然后计算
     ret = Decimal(float(s.split('*')[0])) * Decimal(float(s.split('*')[1])) if '*' in s else Decimal(float(s.split('/')[0])) / Decimal(float(s.split('/')[1]))
@@ -128,7 +130,7 @@ def oneDay():
     lines=[]
     answer=[]
     
-    count = 20 # 每天的题目数
+    count = 5 # 每天的题目数
     for i in range(count):
         exp = createExp(random.randint(4,5), True)
         ans = removeRight0(calculate(exp))
@@ -138,22 +140,25 @@ def oneDay():
         
     return (lines, answer)
   
-# 生成10天题目     
+# 生成n天的题目，并保存成文件
 def createDoc():
     filename= "c:\\temp\\" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")+".txt" 
     getcontext().prec = 10
-    with open(filename, "w") as f:
+    with codecs.open(filename, "w", 'utf-8') as f:
         dayanswer = []
-        days = 10  # 生成10天
+        days = 7  # 生成n天题目
         for day in range(days):
             f.write("Day " + str(day + 1) + " : " +"\n\n")
             oneday = oneDay()
             i = 1
             for line in oneday[0]:
-                f.write(str(i) + '. ' + line)
+                out = line.replace('/','÷')
+                f.write(str(i) + '. ' + out)
                 i = i + 1
-                f.write("\n\n")
-            f.write("\n\n")
+                f.write("\n")    #题目换行
+            
+                for blanki in range(7):
+                    f.write("\n")   #题目间留空白
             
             i = 1
             daya = "Day " + str(day + 1) + " : "
