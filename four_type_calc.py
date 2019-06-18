@@ -62,8 +62,8 @@ def createExp(count = 5, hasBrackets = False):
     braEnd = False
     hasMid = False
     for i in range(0, count):
-        z = random.randint(1,3)   #整数部分
-        x = random.randint(1,2)   #小数部分
+        z = random.randint(1,2)   #整数部分
+        x = 1 #一位小数  #random.randint(1,2)   #小数部分
 
         if hasBrackets and not braStart and i != count-1 and not s.endswith('/'):
             if random.randint(0, 2) == 2:
@@ -101,11 +101,11 @@ def createExp(count = 5, hasBrackets = False):
     
 
 # 生成一个带小数，共total位，其中小数部分xiao位
-def createNum(total = 5, xiao = 3):
+def createNum(total = 3, xiao = 1):
     num = Decimal(random.randint(10**(total-1), 10**total - 1)) / Decimal(10**xiao)
     return num
 
-# 生成0.1格式的小鼠
+# 生成0.1格式的小数
 def createDivTen():
     r = random.randint(1,3)
     num = 10**r
@@ -130,9 +130,9 @@ def oneDay():
     lines=[]
     answer=[]
     
-    count = 5 # 每天的题目数
+    count = 10 # 每天的题目数
     for i in range(count):
-        exp = createExp(random.randint(4,5), True)
+        exp = createExp(random.randint(4,5), False)
         ans = removeRight0(calculate(exp))
         
         lines.append(exp)
@@ -155,11 +155,14 @@ def createDoc():
                 out = line.replace('/','÷')
                 f.write(str(i) + '. ' + out)
                 i = i + 1
-                f.write("\n")    #题目换行
-            
-                for blanki in range(7):
-                    f.write("\n")   #题目间留空白
-            
+                
+                if i % 2 == 1:  #新的奇数行姚换行
+                    for blanki in range(4):
+                        f.write("\n")   #题目间留空白
+                else:  #偶数行题目间同一行，留空白
+                    for blanki in range(15):
+                        f.write(" ")   #同一行间留空白
+
             i = 1
             daya = "Day " + str(day + 1) + " : "
             for word in oneday[1]:
