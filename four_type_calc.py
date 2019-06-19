@@ -56,7 +56,7 @@ def calculate(expression):                        # 计算包含括号的表达�
 #print('用eval计算出来的值为：{}\n计算器计算出来的值为：{}'.format(eval(s), calculate(s)))
 
 # 生成含count个计算项的四则运算
-def createExp(count = 5, hasBrackets = False):
+def createExp(count = 5, hasBrackets = False, canNegative = False):
     s = ''
     braStart = False
     braEnd = False
@@ -94,8 +94,11 @@ def createExp(count = 5, hasBrackets = False):
                 optList = optList.replace('/', '')
             s = s + getRandOperator(optList)
     
-
-
+    if canNegative == False:  # 不允许结果为负数
+        test = calculate(s)
+        if test < 0:
+            s = createExp(count, hasBrackets, canNegative)
+            
     return s
         
     
@@ -116,9 +119,12 @@ def getRandOperator(optList):
     s = optList [random.randint(0, len(optList)-1)]
     return s
 
-# 删除右边多余的0
+# 删除小数右边多余的0
 def removeRight0(dec):
     s = str(dec)
+    if s.find('.') < 0:  #不含小数点
+        return s
+    
     total = len(s)
     for i in range(1, total):
         if s.endswith('0') or s.endswith('.'):
@@ -130,9 +136,12 @@ def oneDay():
     lines=[]
     answer=[]
     
+    hasBrackets = False
+    canNegative = False
+    
     count = 10 # 每天的题目数
     for i in range(count):
-        exp = createExp(random.randint(4,5), False)
+        exp = createExp(random.randint(4,5), hasBrackets, canNegative)
         ans = removeRight0(calculate(exp))
         
         lines.append(exp)
